@@ -101,7 +101,7 @@ app.post("/api/houses", upload.single("img") , (req, res)=>{
     //console.log(req.body);
     const isValidHouse = validateHouse(req.body);
 
-    if(result.error){
+    if(isValidHouse.error){
         console.log("Invalid house");
         return;
     }
@@ -113,9 +113,9 @@ const validateHouse = (house) => {
     const schema = Joi.object({
         _id:Joi.allow(""),
         name:Joi.string().min(3).required(),
-        size:Joi.number().required.min(0),
-        bedrooms:Joi.number().required.min(0),
-        bathrooms:Joi.number().required.min(0),
+        size:Joi.number().required().min(0),
+        bedrooms:Joi.number().required().min(0),
+        bathrooms:Joi.number().required().min(0),
     });
 
     return schema.validate(house);
