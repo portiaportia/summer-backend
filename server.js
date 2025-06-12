@@ -97,7 +97,21 @@ app.get("/api/houses",(req, res)=>{
     res.send(houses);
 });
 
+app.post("/api/houses", upload.single("img") , (req, res)=>{
+    //console.log(req.body);
+});
 
+const validateHouse = (house) => {
+    const schema = Joi.object({
+        _id:Joi.allow(""),
+        name:Joi.string().min(3).required(),
+        size:Joi.number().required.min(0),
+        bedrooms:Joi.number().required.min(0),
+        bathrooms:Joi.number().required.min(0),
+    });
+
+    return schema.validate(house);
+};
 
 app.listen(3001, ()=>{
     console.log("I'm listening...");
