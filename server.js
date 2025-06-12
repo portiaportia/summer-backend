@@ -103,10 +103,24 @@ app.post("/api/houses", upload.single("img") , (req, res)=>{
 
     if(isValidHouse.error){
         console.log("Invalid house");
+        res.status(400).send(isValidHouse.error.details[0].message);
         return;
     }
 
-    console.log("valid house");
+    const house = {
+        _id:houses.length,
+        name:req.body.name,
+        size:req.body.size,
+        bedrooms:req.body.bedrooms,
+        bathrooms:req.body.bathrooms
+    }
+
+    if(req.file){
+        house.main_image = req.file.filename;
+    }
+
+    houses.push(house);
+    res.status(200).send(house);
 });
 
 const validateHouse = (house) => {
