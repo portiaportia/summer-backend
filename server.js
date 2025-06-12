@@ -99,6 +99,14 @@ app.get("/api/houses",(req, res)=>{
 
 app.post("/api/houses", upload.single("img") , (req, res)=>{
     //console.log(req.body);
+    const isValidHouse = validateHouse(req.body);
+
+    if(result.error){
+        console.log("Invalid house");
+        return;
+    }
+
+    console.log("valid house");
 });
 
 const validateHouse = (house) => {
