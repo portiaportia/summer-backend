@@ -2,6 +2,7 @@ const express = require("express");
 const cors = require("cors");
 const multer = require("multer");
 const Joi = require("joi");
+const mongoose = require("mongoose");
 const app = express();
 app.use(express.static("public"));
 app.use(express.json());
@@ -18,6 +19,14 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage: storage });
 
+mongoose
+  .connect("mongodb+srv://portiaportia:RCq4HTMF7ZXfeU8O@data.ng58qmq.mongodb.net/")
+  .then(() => {
+    console.log("connected to mongodb");
+  })
+  .catch((error) => {
+    console.log("couldn't connect to mongodb", error);
+  });
 
 let houses = [
     {
