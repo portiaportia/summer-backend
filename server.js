@@ -43,8 +43,8 @@ app.get("/api/houses",async(req, res)=>{
     res.send(houses);
 });
 
-/*
-app.post("/api/houses", upload.single("img") , (req, res)=>{
+
+app.post("/api/houses", upload.single("img") , async(req, res)=>{
     //console.log(req.body);
     const isValidHouse = validateHouse(req.body);
 
@@ -54,22 +54,22 @@ app.post("/api/houses", upload.single("img") , (req, res)=>{
         return;
     }
 
-    const house = {
-        _id:houses.length,
+    const house = new House({
         name:req.body.name,
         size:req.body.size,
         bedrooms:req.body.bedrooms,
         bathrooms:req.body.bathrooms
-    }
+    });
 
     if(req.file){
         house.main_image = req.file.filename;
     }
 
-    houses.push(house);
-    res.status(200).send(house);
+    const newHouse = await house.save();
+    res.status(200).send(newHouse);
 });
 
+/*
 app.put("/api/houses/:id", upload.single("img"), (req, res)=>{
     //console.log(`You are trying to edit ${req.params.id}`);
     //console.log(req.body);
@@ -110,7 +110,7 @@ app.delete("/api/houses/:id", (req,res)=>{
     houses.splice(index, 1);
     res.status(200).send(house);
 });
-
+*/
 
 const validateHouse = (house) => {
     const schema = Joi.object({
@@ -123,7 +123,7 @@ const validateHouse = (house) => {
 
     return schema.validate(house);
 };
-*/
+
 app.listen(3001, ()=>{
     console.log("I'm listening...");
 });
