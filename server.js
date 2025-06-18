@@ -36,7 +36,10 @@ const houseSchema = new mongoose.Schema({
     main_image:String
 });
 
-app.get("/api/houses",(req, res)=>{
+const House = mongoose.model("House", houseSchema);
+
+app.get("/api/houses",async(req, res)=>{
+    const houses = await House.find();
     res.send(houses);
 });
 
