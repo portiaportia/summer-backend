@@ -69,13 +69,9 @@ app.post("/api/houses", upload.single("img") , async(req, res)=>{
     res.status(200).send(newHouse);
 });
 
-/*
-app.put("/api/houses/:id", upload.single("img"), (req, res)=>{
+app.put("/api/houses/:id", upload.single("img"), async(req, res)=>{
     //console.log(`You are trying to edit ${req.params.id}`);
     //console.log(req.body);
-
-    const house = houses.find((h)=>h._id===parseInt(req.params.id));
-
     const isValidUpdate = validateHouse(req.body);
 
     if(isValidUpdate.error){
@@ -84,20 +80,30 @@ app.put("/api/houses/:id", upload.single("img"), (req, res)=>{
         return;
     }
 
-    house.name = req.body.name;
-    house.description = req.body.description;
-    house.size = req.body.size;
-    house.bathrooms = req.body.bathrooms;
-    house.bedrooms = req.body.bedrooms;
-
+    const fieldsToUpdate = {
+        name : req.body.name,
+        description : req.body.description,
+        size : req.body.size,
+        bathrooms : req.body.bathrooms,
+        bedrooms : req.body.bedrooms
+    }
+    
     if(req.file){
-        house.main_image = req.file.filename;
+        fieldsToUpdate.main_image = req.file.filename;
     }
 
+    const success = await House.updateOne({_id:req.params.id}, fieldsToUpdate);
+
+    if(!success){
+        res.status(404).send("We couldn't locate the ouse to edit");
+        return;
+    }
+
+    const house = await House.findById(req.params.id);
     res.status(200).send(house);
 
 });
-
+/*
 app.delete("/api/houses/:id", (req,res)=>{
     const house = houses.find((h)=>h._id===parseInt(req.params.id));
     
